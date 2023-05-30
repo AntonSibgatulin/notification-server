@@ -18,7 +18,7 @@ public class RegUserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(columnDefinition = "VARCHAR(19)")
+    @Column(columnDefinition = "VARCHAR(19)",nullable = false)
     private String phone;
     private Integer code;
 

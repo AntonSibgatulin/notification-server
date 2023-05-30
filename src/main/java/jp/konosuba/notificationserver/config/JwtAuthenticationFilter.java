@@ -4,6 +4,8 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jp.konosuba.notificationserver.user.token.AuthToken;
+import jp.konosuba.notificationserver.user.token.TokenRepository;
 import jp.konosuba.notificationserver.user.user.UserRepository;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +26,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final UserRepository userRepository;
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
+    private final TokenRepository tokenRepository;
 
     @Override
     protected void doFilterInternal(@NonNull  HttpServletRequest request,@NonNull  HttpServletResponse response,@NonNull  FilterChain filterChain) throws ServletException, IOException {
@@ -39,6 +42,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             userPhone = jwtService.extractPhone(token);
         }catch(Exception e){
             filterChain.doFilter(request,response);
+            return;
+        }
+
+        if(userPhone!=null){
+            AuthToken authToken = tokenRepository.getAuthTokenByToken(token);
+            if (authToken == null){
+                filterChain.doFilter(request,response);
+                return;
+            }
         }
 
         if (userPhone != null && SecurityContextHolder.getContext().getAuthentication() == null){

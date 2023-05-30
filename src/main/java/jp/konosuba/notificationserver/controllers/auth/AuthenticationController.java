@@ -11,17 +11,23 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/auth")
 public class AuthenticationController {
 
-private final AuthenticationService authenticationService ;
+    // 私はサビスおしようします
+    private final AuthenticationService authenticationService;
 
-    
 
-
-    @PostMapping("/")
-    public ResponseEntity<AuthenticationResponse> auth(
-            @RequestParam String phone
-    ){
-        // 私はサビスおしようします
+    @PostMapping("")
+    public ResponseEntity<AuthenticationResponse> auth(@RequestParam String phone) {
         return authenticationService.auth(phone);
     }
+    //for already registered users
+    @PostMapping("/check")
+    public ResponseEntity<AuthenticationResponse> check(@RequestParam String phone,@RequestParam Integer code) {
+        return authenticationService.check(phone,code);
+    }
+    @PostMapping("/regcheck")
+    public ResponseEntity<AuthenticationResponse> regcheck(@RequestParam String phone,@RequestParam Integer code) {
+        return authenticationService.regcheck(phone,code);
+    }
+
 
 }

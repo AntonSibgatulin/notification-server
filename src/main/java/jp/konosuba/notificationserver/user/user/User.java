@@ -22,13 +22,12 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(unique = true,columnDefinition = "VARCHAR(19)")
+    @Column(unique = true,columnDefinition = "VARCHAR(19)",nullable = false)
     private  String phone;
 
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @Transient
     private String password;
 
     @Override
