@@ -15,16 +15,16 @@ public class AuthenticationController {
     private final AuthenticationService authenticationService;
 
 
-    @PostMapping("")
+    @GetMapping("")
     public ResponseEntity<AuthenticationResponse> auth(@RequestParam String phone) {
         return authenticationService.auth(phone);
     }
     //for already registered users
-    @PostMapping("/check")
+    @GetMapping("/check")
     public ResponseEntity<AuthenticationResponse> check(@RequestParam String phone,@RequestParam Integer code) {
         return authenticationService.check(phone,code);
     }
-    @PostMapping("/regcheck")
+    @GetMapping("/regcheck")
     public ResponseEntity<AuthenticationResponse> regcheck(@RequestParam String phone,@RequestParam Integer code) {
         return authenticationService.regcheck(phone,code);
     }
