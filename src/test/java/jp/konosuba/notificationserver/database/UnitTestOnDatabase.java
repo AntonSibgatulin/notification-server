@@ -1,16 +1,15 @@
 package jp.konosuba.notificationserver.database;
 
-import jp.konosuba.notificationserver.user.authuser.AuthUserEntity;
-import jp.konosuba.notificationserver.user.authuser.AuthUserRepository;
-import jp.konosuba.notificationserver.user.reguser.RegUserEntity;
-import jp.konosuba.notificationserver.user.reguser.RegUserRepository;
-import jp.konosuba.notificationserver.user.user.Role;
-import jp.konosuba.notificationserver.user.user.User;
-import jp.konosuba.notificationserver.user.user.UserRepository;
+import jp.konosuba.notificationserver.data.user.authuser.AuthUserEntity;
+import jp.konosuba.notificationserver.data.user.authuser.AuthUserRepository;
+import jp.konosuba.notificationserver.data.user.reguser.RegUserEntity;
+import jp.konosuba.notificationserver.data.user.reguser.RegUserRepository;
+import jp.konosuba.notificationserver.data.user.user.Role;
+import jp.konosuba.notificationserver.data.user.user.User;
+import jp.konosuba.notificationserver.data.user.user.UserRepository;
 import jp.konosuba.notificationserver.utils.StringUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.api.extension.Extension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;

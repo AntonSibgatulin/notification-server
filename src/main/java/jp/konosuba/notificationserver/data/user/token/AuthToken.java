@@ -1,7 +1,7 @@
-package jp.konosuba.notificationserver.user.token;
+package jp.konosuba.notificationserver.data.user.token;
 
 import jakarta.persistence.*;
-import jp.konosuba.notificationserver.user.user.User;
+import jp.konosuba.notificationserver.data.user.user.User;
 import lombok.Data;
 
 @Data

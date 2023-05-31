@@ -1,4 +1,4 @@
-package jp.konosuba.notificationserver.user.reguser;
+package jp.konosuba.notificationserver.data.user.reguser;
 
 import jakarta.persistence.*;
 import lombok.Data;

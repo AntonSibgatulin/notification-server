@@ -1,10 +1,12 @@
-package jp.konosuba.notificationserver.user.user;
+package jp.konosuba.notificationserver.data.user.user;
 
 import jakarta.persistence.*;
+import jp.konosuba.notificationserver.data.messages.MessageEntity;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.aspectj.bridge.Message;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -29,6 +31,11 @@ public class User implements UserDetails {
     private Role role;
 
     private String password;
+
+    /*@ManyToMany
+    @JoinTable
+    private List<MessageEntity> messages;
+    */
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

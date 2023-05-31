@@ -1,7 +1,9 @@
-package jp.konosuba.notificationserver.contact;
+package jp.konosuba.notificationserver.data.contact;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import jp.konosuba.notificationserver.user.user.User;
+import jakarta.validation.constraints.NotNull;
+import jp.konosuba.notificationserver.data.user.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,6 +18,7 @@ public class Contacts {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+
     private String name;
     private String phone;
     private String email;
@@ -25,7 +28,7 @@ public class Contacts {
     private Boolean vk;
     private Boolean ws; //whatsapp
 
-
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;

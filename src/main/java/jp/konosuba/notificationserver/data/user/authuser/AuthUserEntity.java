@@ -1,7 +1,7 @@
-package jp.konosuba.notificationserver.user.authuser;
+package jp.konosuba.notificationserver.data.user.authuser;
 
 import jakarta.persistence.*;
-import jp.konosuba.notificationserver.user.user.User;
+import jp.konosuba.notificationserver.data.user.user.User;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

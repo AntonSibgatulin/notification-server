@@ -1,5 +1,6 @@
 package jp.konosuba.notificationserver.controllers.contacts.util;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,6 +11,7 @@ import lombok.NoArgsConstructor;
 
 public class ContactModel {
 
+    @NotNull
     private String name;
     private String phone;
     private String email;

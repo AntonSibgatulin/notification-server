@@ -1,19 +1,18 @@
 package jp.konosuba.notificationserver.controllers.auth.service;
 
-import jp.konosuba.notificationserver.codes.Code;
+import jp.konosuba.notificationserver.data.codes.Code;
 import jp.konosuba.notificationserver.config.JwtService;
 import jp.konosuba.notificationserver.controllers.auth.responses.AuthenticationResponse;
-import jp.konosuba.notificationserver.user.authuser.AuthUserEntity;
-import jp.konosuba.notificationserver.user.authuser.AuthUserRepository;
-import jp.konosuba.notificationserver.user.reguser.RegUserEntity;
-import jp.konosuba.notificationserver.user.reguser.RegUserRepository;
-import jp.konosuba.notificationserver.user.token.AuthToken;
-import jp.konosuba.notificationserver.user.token.TokenRepository;
-import jp.konosuba.notificationserver.user.user.Role;
-import jp.konosuba.notificationserver.user.user.User;
-import jp.konosuba.notificationserver.user.user.UserRepository;
+import jp.konosuba.notificationserver.data.user.authuser.AuthUserEntity;
+import jp.konosuba.notificationserver.data.user.authuser.AuthUserRepository;
+import jp.konosuba.notificationserver.data.user.reguser.RegUserEntity;
+import jp.konosuba.notificationserver.data.user.reguser.RegUserRepository;
+import jp.konosuba.notificationserver.data.user.token.AuthToken;
+import jp.konosuba.notificationserver.data.user.token.TokenRepository;
+import jp.konosuba.notificationserver.data.user.user.Role;
+import jp.konosuba.notificationserver.data.user.user.User;
+import jp.konosuba.notificationserver.data.user.user.UserRepository;
 import jp.konosuba.notificationserver.utils.StringUtils;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 

@@ -1,4 +1,4 @@
-package jp.konosuba.notificationserver.user.reguser;
+package jp.konosuba.notificationserver.data.user.reguser;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
