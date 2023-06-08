@@ -17,10 +17,10 @@ services:
     image: mysql
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
       MYSQL_DATABASE: notification
     ports:
-      - "3306:3307"
+      - "3307:3306"
     volumes:
       - mysql_data:/var/lib/mysql
 

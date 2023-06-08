@@ -9,7 +9,7 @@ import jp.konosuba.notificationserver.data.messages.MessageEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import java.util.*;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/v1/messages")
@@ -20,7 +20,7 @@ public class MessagesController {
 
 
     @GetMapping("/getMyMessages")
-    public ResponseEntity<MessagesListResponse> getAllMyMessages() {
+    public List<MessageEntity> getAllMyMessages() {
 
         return this.messagesService.getAllMyMessages();
     }

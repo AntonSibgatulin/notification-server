@@ -1,0 +1,10 @@
+{
+  "countThreadInPoll": 500,
+  "name_of_topic": "notificator-api",
+  "mail.smtp.auth": "auth",
+  "mail.smtp.starttls.enable": "true",
+  "mail.smtp.host": "",
+  "mail.smtp.port": "587",
+  "EMAIL_USERNAME": "",
+  "EMAIL_PASSWORD": ""
+}

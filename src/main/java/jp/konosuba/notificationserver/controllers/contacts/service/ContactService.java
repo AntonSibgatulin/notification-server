@@ -2,6 +2,8 @@ package jp.konosuba.notificationserver.controllers.contacts.service;
 
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
+
+import jakarta.validation.Valid;
 import jp.konosuba.notificationserver.data.codes.Code;
 import jp.konosuba.notificationserver.data.contact.Contacts;
 import jp.konosuba.notificationserver.data.contact.ContactsMapper;
@@ -27,12 +29,14 @@ import java.util.List;
 public record ContactService(ContactsRepository contactsRepository,
                              ContactsMapper contactsMapper) {
 
-    public ResponseEntity<AllContactsResponse> getMyContacts() {
+    public List<Contacts> getMyContacts() {
         var user = StringUtils.getUser();
 
         List<Contacts> contactsList = contactsRepository.findAllByUser(user);
-
-        return ResponseEntity.ok(new AllContactsResponse(contactsList));
+        if (contactsList==null){
+            contactsList = new ArrayList<>();
+        }
+        return (contactsList);
 
     }
 
@@ -120,7 +124,9 @@ public record ContactService(ContactsRepository contactsRepository,
     public ResponseEntity<ContactResponse> createContact(ContactModel contactModel) {
         var contacts = contactsMapper.fromContactModeltoContacts(contactModel);
         var user = StringUtils.getUser();
+        
         contacts.setUser(user);
+
         contactsRepository.save(contacts);
         return ResponseEntity.ok(new ContactResponse("ok",Code.OK));
     }
@@ -139,4 +145,16 @@ public record ContactService(ContactsRepository contactsRepository,
 
         return ResponseEntity.ok(new ContactResponse("ok",Code.OK));
     }
+
+	public ResponseEntity<ContactResponse> deleteContacts(@Valid List<Long> deleted) {
+		User user = StringUtils.getUser();
+
+        List<Contacts> cList = new ArrayList<>();
+        for (Long id:deleted){
+            Contacts contacts = contactsRepository.getContactsByUserAndId(user, id);
+            cList.add(contacts);
+        }
+        contactsRepository.deleteAll(cList);
+        return ResponseEntity.ok(new ContactResponse("ok", Code.OK));
+	}
 }

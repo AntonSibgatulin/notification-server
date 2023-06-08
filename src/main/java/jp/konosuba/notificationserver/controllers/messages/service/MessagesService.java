@@ -21,10 +21,10 @@ import java.util.List;
 public record MessagesService(MessageRepository messageRepository, ContactsRepository contactsRepository) {
 
 
-    public ResponseEntity<MessagesListResponse> getAllMyMessages() {
+    public List<MessageEntity> getAllMyMessages() {
         var user = StringUtils.getUser();
         List<MessageEntity> messages = messageRepository.findAllByUser(user);
-        return ResponseEntity.status(Code.OK).body(new MessagesListResponse(messages));
+        return messages;
     }
 
 
@@ -74,7 +74,7 @@ public record MessagesService(MessageRepository messageRepository, ContactsRepos
 
         List<Contacts> contactsList = loadListOfContacts(messageRequest.getContacts(),user);
         message.setContacts(contactsList);
-
+        message.setUser(user);
         messageRepository.save(message);
 
         return ResponseEntity.status(Code.OK).body(new MessagesResponse("ok",Code.OK));

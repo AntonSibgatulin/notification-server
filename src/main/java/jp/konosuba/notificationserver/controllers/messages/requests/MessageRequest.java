@@ -10,5 +10,6 @@ public class MessageRequest {
 
     private String message;
     private List<Long> contacts;
+    private Integer type;
 
 }

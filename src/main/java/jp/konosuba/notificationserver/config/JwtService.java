@@ -5,6 +5,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import jp.konosuba.notificationserver.utils.StringUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -43,8 +44,9 @@ public class JwtService {
         return Jwts.builder()
                 .setClaims(extractClaims)
                 .setSubject(userDetails.getUsername())
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis()+1000*60*60*24*31*12*500))
+                .setId(StringUtils.generateCodeStatic(50))
+                //.setIssuedAt(new Date(System.currentTimeMillis()))
+                //.setExpiration(new Date(System.currentTimeMillis()+1000*60*60*24*31*12*500))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
 

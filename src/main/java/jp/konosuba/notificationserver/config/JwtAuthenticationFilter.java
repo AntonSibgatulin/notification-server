@@ -41,6 +41,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         try {
             userPhone = jwtService.extractPhone(token);
         }catch(Exception e){
+            e.printStackTrace();
             filterChain.doFilter(request,response);
             return;
         }

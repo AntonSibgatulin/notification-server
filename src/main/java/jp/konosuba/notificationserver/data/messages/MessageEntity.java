@@ -1,6 +1,8 @@
 package jp.konosuba.notificationserver.data.messages;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import jakarta.persistence.*;
 import jp.konosuba.notificationserver.data.contact.Contacts;
 import jp.konosuba.notificationserver.data.user.user.User;
@@ -13,7 +15,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-
+@JsonIgnoreProperties(value = { "user" })
 @Entity
 @Table(name = "messages")
 public class MessageEntity {
@@ -31,10 +33,15 @@ public class MessageEntity {
     @JoinTable(name = "contacts_id")
     private List<Contacts> contacts;
 
+
+    private Integer typeMessage;
+    
+
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
 
 
 }

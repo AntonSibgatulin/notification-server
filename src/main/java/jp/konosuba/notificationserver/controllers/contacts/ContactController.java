@@ -14,6 +14,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/v1/contacts")
@@ -24,7 +26,7 @@ public class ContactController {
 
 
     @GetMapping("/getMyContacts")
-    private ResponseEntity<AllContactsResponse> getMyContacts(){
+    private List<Contacts> getMyContacts(){
         return this.contactService.getMyContacts();
     }
 
@@ -53,4 +55,8 @@ public class ContactController {
         return this.contactService.editContact(id,contactModel);
     }
 
+    @PostMapping("/deleteContacts")
+    private ResponseEntity<ContactResponse> deleteContacts(@Valid @RequestBody List<Long> deleted){
+       return this.contactService.deleteContacts(deleted);
+    }   
 }

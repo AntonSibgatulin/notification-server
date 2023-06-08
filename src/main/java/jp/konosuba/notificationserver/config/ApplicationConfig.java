@@ -7,11 +7,16 @@ import jp.konosuba.notificationserver.controllers.contacts.util.ContactModel;
 import jp.konosuba.notificationserver.data.user.user.UserRepository;
 import jp.konosuba.notificationserver.utils.StringUtils;
 import lombok.RequiredArgsConstructor;
+import org.jobrunr.configuration.JobRunr;
 import org.jobrunr.jobs.mappers.JobMapper;
+import org.jobrunr.scheduling.JobScheduler;
 import org.jobrunr.storage.InMemoryStorageProvider;
 import org.jobrunr.storage.StorageProvider;
+import org.jobrunr.utils.mapper.jackson.JacksonJsonMapper;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -20,13 +25,28 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+@EnableWebMvc
 @Configuration
 @RequiredArgsConstructor
 public class ApplicationConfig {
 
 
     private final UserRepository userRepository;
+
+    @Bean
+    public WebMvcConfigurer corsConfigurer() {
+        return new WebMvcConfigurer() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry.addMapping("/**").allowedOrigins("*");
+
+            }
+        };
+    }
 
     @Bean
     public UserDetailsService userDetailsService() {
@@ -49,7 +69,7 @@ public class ApplicationConfig {
                 contacts.setWs(contactModel.getWs());
                 contacts.setVk(contactModel.getVk());
 
-                return null;
+                return contacts;
             }
         };
     }
@@ -72,12 +92,5 @@ public class ApplicationConfig {
         return new BCryptPasswordEncoder();
     }
 
-
-    @Bean
-    public StorageProvider storageProvider(JobMapper jobMapper) {
-        InMemoryStorageProvider storageProvider = new InMemoryStorageProvider();
-        storageProvider.setJobMapper(jobMapper);
-        return storageProvider;
-    }
 
 }

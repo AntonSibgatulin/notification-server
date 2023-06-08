@@ -2,6 +2,7 @@ package jp.konosuba.notificationserver.utils;
 
 import jp.konosuba.notificationserver.controllers.messages.requests.MessageRequest;
 import jp.konosuba.notificationserver.data.messages.MessageEntity;
+import jp.konosuba.notificationserver.data.messages.MessageObject;
 import jp.konosuba.notificationserver.data.user.authuser.AuthUserEntity;
 import jp.konosuba.notificationserver.data.user.reguser.RegUserEntity;
 import jp.konosuba.notificationserver.data.user.token.AuthToken;
@@ -10,6 +11,8 @@ import jp.konosuba.notificationserver.data.user.user.User;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import javax.swing.text.MaskFormatter;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.util.Base64;
 import java.util.Random;
@@ -118,6 +121,48 @@ public class StringUtils {
         var message = new MessageEntity();
         message.setMessage(messageRequest.getMessage());
         message.setTimeCreate(System.currentTimeMillis());
+        message.setTypeMessage(messageRequest.getType());
         return message;
+    }
+
+    private static final char[] hex = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
+
+    public static String byteArray2Hex(byte[] bytes) {
+        StringBuffer sb = new StringBuffer(bytes.length * 2);
+        for(final byte b : bytes) {
+            sb.append(hex[(b & 0xF0) >> 4]);
+            sb.append(hex[b & 0x0F]);
+        }
+        return sb.toString();
+    }
+
+    public static String getStringFromSHA256(String stringToEncrypt)  {
+        MessageDigest messageDigest = null;
+        try {
+            messageDigest = MessageDigest.getInstance("SHA-256");
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        messageDigest.update(stringToEncrypt.getBytes());
+        return byteArray2Hex(messageDigest.digest());
+    }
+
+
+
+    public static String getTypeOfMessage(Integer type){
+        if (type == 1){
+            return "Info";
+        }
+        else if(type == 2){
+            return "Warning";
+        }else if(type == 3){
+            return "Alarm";
+        }else{
+            return "Notification";
+        }
+    }
+    public static MessageObject fromMessageEntityToMessageObject(MessageEntity messageEntity){
+        return new MessageObject(messageEntity.getId(),messageEntity.getMessage(),messageEntity.getTimeCreate(),messageEntity.getContacts(),messageEntity.getTypeMessage());
+
     }
 }
