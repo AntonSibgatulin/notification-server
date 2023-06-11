@@ -23,6 +23,7 @@ public class MessageObject {
     private Contacts[] contacts;
 
 
+
     private Integer typeMessage;
 
 

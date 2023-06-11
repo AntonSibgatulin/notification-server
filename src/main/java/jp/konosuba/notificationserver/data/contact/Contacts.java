@@ -7,6 +7,7 @@ import jp.konosuba.notificationserver.data.user.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.json.JSONObject;
 
 @Entity
 @Data
@@ -32,4 +33,6 @@ public class Contacts {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+
 }

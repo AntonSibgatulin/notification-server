@@ -5,14 +5,18 @@ import jp.konosuba.notificationserver.NotificationServerApplication;
 import jp.konosuba.notificationserver.data.contact.Contacts;
 import jp.konosuba.notificationserver.data.messages.MessageObject;
 import jp.konosuba.notificationserver.data.user.user.User;
+import jp.konosuba.notificationserver.utils.ClassUtils;
 import jp.konosuba.notificationserver.utils.StringUtils;
 import org.jobrunr.jobs.annotations.Job;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
+import redis.clients.jedis.Jedis;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -28,13 +32,14 @@ public class QueueJobRunr extends Thread {
 
 
     private final RedisTemplate<String, String> redisTemplate;
+    private ValueOperations<String, String> valueOps;
     private final KafkaTemplate<String, String> kafkaTemplate;
 
 
     public QueueJobRunr(RedisTemplate<String, String> redisTemplate, KafkaTemplate<String, String> kafkaTemplate) {
         this.redisTemplate = redisTemplate;
         this.kafkaTemplate = kafkaTemplate;
-
+        this.valueOps = redisTemplate.opsForValue();
         executorService = Executors.newFixedThreadPool(NotificationServerApplication.count_of_thread_to_put_in_poll);
         super.start();
     }
@@ -45,20 +50,38 @@ public class QueueJobRunr extends Thread {
 
     @Job(name = "addMessageToQueueInKafka")
     public void execute(User user, MessageObject messageEntity) {
-       System.out.println("run job");
         String messageData = StringUtils.getTypeOfMessage(messageEntity.getTypeMessage())+";"+messageEntity.getMessage();
+        
         String id = "id"+messageEntity.getId();
+        /*Jedis jedis = new Jedis();
+        jedis.set(id,messageData);
+        jedis.close();
 
+         */
         putValue(id,messageData);
+
 
         for (int x = 0; x < messageEntity.getContacts().length; x++) {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("typeOperation","send");
-            jsonObject.put("contact",new Gson().toJson(messageEntity.getContacts()[x]));
+            jsonObject.put("contact", new JSONObject(ClassUtils.fromObjectToJson(messageEntity.getContacts()[x])));
             jsonObject.put("messageId",id);
             jsonObject.put("type","email");
-            list.offer(jsonObject);
+            jsonObject.put("userId",user.getId());
+            kafkaTemplate.send(NotificationServerApplication.name_of_topic, jsonObject.toString());
+
+            //System.out.println(jsonObject);
+            //list.offer(jsonObject);
         }
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("typeOperation","end_send");
+        jsonObject.put("messageId",id);
+        jsonObject.put("userId",user.getId());
+        kafkaTemplate.send(NotificationServerApplication.name_of_topic, jsonObject.toString());
+
+        //list.offer(jsonObject);
+
+
     }
 
 
@@ -68,11 +91,17 @@ public class QueueJobRunr extends Thread {
     public void run() {
         while (true) {
             if (this.list.isEmpty() == false) {
+                JSONObject jsonObject = list.poll();
+
+                if(jsonObject == null){
+                    continue;
+                }
+
                 Runnable runnable = new Runnable() {
                     @Override
                     public void run() {
-                        JSONObject jsonObject = list.poll();
-                        kafkaTemplate.send(NotificationServerApplication.name_of_topic, jsonObject.toString());
+
+                           //kafkaTemplate.send(NotificationServerApplication.name_of_topic, jsonObject.toString());
 
                     }
                 };
@@ -82,7 +111,9 @@ public class QueueJobRunr extends Thread {
     }
 
     public void putValue(final String key, final String value) {
-        redisTemplate.opsForValue().set(key, value);
+        valueOps.set(key, value);
     }
-
+    public String getMessage(String key) {
+        return valueOps.get(key);
+    }
 }

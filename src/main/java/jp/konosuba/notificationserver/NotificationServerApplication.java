@@ -13,15 +13,27 @@ import java.io.*;
 @EnableBatchProcessing
 @SpringBootApplication
 public class NotificationServerApplication {
+
     public static Integer count_of_thread_to_put_in_poll;
     public static String name_of_topic;
+    public static String redis_host;
+    public static Integer redis_port;
+    public static Integer count_of_consumers;
+
     public static void main(String[] args) {
         JSONObject jsonObject = readConfigureFile("configure/config.json");
 
         Integer countThreadInPoll = jsonObject.getInt("countThreadInPoll");
         String nameOfTopic = jsonObject.getString("name_of_topic");
+        String redisHost = jsonObject.getString("redis_host");
+        Integer redisPort = jsonObject.getInt("redis_port");
+        Integer countOfConsumers = jsonObject.getInt("count_of_consumers");
+
         count_of_thread_to_put_in_poll = countThreadInPoll;
         name_of_topic = nameOfTopic;
+        redis_host = redisHost;
+        redis_port = redisPort;
+        count_of_consumers = countOfConsumers;
 
 
         SpringApplication.run(NotificationServerApplication.class, args);

@@ -1,6 +1,8 @@
 package jp.konosuba.notificationserver.utils;
 
+import jp.konosuba.notificationserver.controllers.cron.requests.CronCreateRequest;
 import jp.konosuba.notificationserver.controllers.messages.requests.MessageRequest;
+import jp.konosuba.notificationserver.data.cron.Cron;
 import jp.konosuba.notificationserver.data.messages.MessageEntity;
 import jp.konosuba.notificationserver.data.messages.MessageObject;
 import jp.konosuba.notificationserver.data.user.authuser.AuthUserEntity;
@@ -91,6 +93,15 @@ public class StringUtils {
         authToken.setToken(token);
         authToken.setUser(user);
         return authToken;
+    }
+
+    public static Cron fromCronCreateRequestToCron(CronCreateRequest cronCreateRequest) {
+        var cron = new Cron();
+        cron.setCronType(cronCreateRequest.getCronType());
+        cron.setCodeFine(cronCreateRequest.getCodeFine());
+        cron.setMessage(cronCreateRequest.getMessage());
+        cron.setHttp(cronCreateRequest.getHttp());
+        return cron;
     }
 
     private String generateToken() {

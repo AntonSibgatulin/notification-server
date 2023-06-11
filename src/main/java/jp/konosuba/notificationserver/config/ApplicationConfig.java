@@ -29,7 +29,7 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-@EnableWebMvc
+//@EnableWebMvc
 @Configuration
 @RequiredArgsConstructor
 public class ApplicationConfig {
@@ -37,7 +37,7 @@ public class ApplicationConfig {
 
     private final UserRepository userRepository;
 
-    @Bean
+   /* @Bean
     public WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurer() {
             @Override
@@ -47,6 +47,7 @@ public class ApplicationConfig {
             }
         };
     }
+    */
 
     @Bean
     public UserDetailsService userDetailsService() {

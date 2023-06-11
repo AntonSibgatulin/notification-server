@@ -5,11 +5,12 @@ services:
     image: postgres
     restart: always
     environment:
-      POSTGRES_USER: root
-      POSTGRES_PASSWORD: Dert869$$
-      POSTGRES_DB: notification
+      POSTGRES_USER: "root"
+      POSTGRES_PASSWORD: "Dert869$$"
+      POSTGRES_DB: "notification"
     ports:
       - "5432:5432"
+#    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
@@ -18,9 +19,9 @@ services:
     restart: always
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
-      MYSQL_DATABASE: notification
+      MYSQL_DATABASE: "notification"
     ports:
-      - "3307:3306"
+      - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
 
