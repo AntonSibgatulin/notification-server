@@ -33,19 +33,29 @@ public record CronService(CronRepository cronRepository,
 
     public ResponseEntity<CronResponse> createCron(CronCreateRequest cronCreateRequest){
 
+        var user = StringUtils.getUser();
+        List<Cron> getCron = cronRepository.getCronByUserId(user.getId());
+        if(getCron.size()>=3){
+            return ResponseEntity.status(Code.ACCESS_DENIED).body(new CronResponse("TO_MANY_CRONS",Code.ACCESS_DENIED));
+        }
+
         var cron = StringUtils.fromCronCreateRequestToCron(cronCreateRequest);
-        List<Contacts> list = contactsRepository.findByUserIds(cronCreateRequest.getContacts());
+
+        List<Contacts> list = contactsRepository.findAllById(cronCreateRequest.getContacts());
+        System.out.println(ClassUtils.fromObjectToJson(list));
         cron.setContacts(list);
         cron.setCronStatus(CronStatus.OK);
 
-        var user = StringUtils.getUser();
         cron.setUserId(user.getId());
 
         cronRepository.save(cron);
-        var jsonObject = new JSONObject(ClassUtils.fromObjectToJson(cron));
+        
+        //////////////////////
+        var jsonObject = new JSONObject();
         jsonObject.put("typeOperation","new_cron");
-
-        kafkaTemplate.send(NotificationServerApplication.name_of_topic,jsonObject.toString());
+        jsonObject.put("cron",new JSONObject(ClassUtils.fromObjectToJson(cron)));
+        sendMessageInKafka(jsonObject.toString());
+        //////////////////////
 
         return ResponseEntity.ok(new CronResponse("fine", Code.OK));
     }
@@ -54,11 +64,81 @@ public record CronService(CronRepository cronRepository,
     public ResponseEntity<Cron> getCronById(Long id){
         var cron = cronRepository.getReferenceById(id);
 
-        if(cron!=null){
+        if(cron!=null && cron.getUserId() == StringUtils.getUser().getId()){
             return ResponseEntity.ok(cron);
         }else{
             return ResponseEntity.status(Code.NOT_FOUND).body(null);
         }
+    }
+
+
+
+    public ResponseEntity<CronResponse> deleteCron(Long id){
+        var cron = cronRepository.getReferenceById(id);
+        if(cron == null){
+            return ResponseEntity.status(Code.NOT_FOUND).body(new CronResponse("NOT_FOUND",Code.NOT_FOUND));
+        }
+        var user = StringUtils.getUser();
+        if (user.getId() == cron.getUserId()) {
+            cronRepository.deleteById(id);
+
+            //////////////////////////////////
+            var jsonObject = new JSONObject();
+            jsonObject.put("cronId",cron.getId());
+            jsonObject.put("typeOperation","delete_cron");
+            sendMessageInKafka(jsonObject.toString());
+            //////////////////////////////////
+
+            return ResponseEntity.ok(new CronResponse("ok", Code.OK));
+        }else{
+            return ResponseEntity.status(Code.NOT_FOUND).body(new CronResponse("NOT_FOUND",Code.NOT_FOUND));
+
+        }
+    }
+
+
+    public ResponseEntity<Cron> editCron(CronCreateRequest cronCreateRequest,Long id){
+        var user = StringUtils.getUser();
+
+        var cron = cronRepository.getReferenceById(id);
+        if(cron == null || cron.getUserId() != user.getId()){
+            return ResponseEntity.status(Code.NOT_FOUND).body(null);
+        }
+
+        cron.setCodeFine(cronCreateRequest.getCodeFine());
+        cron.setMessage(cronCreateRequest.getMessage());
+        cron.setHttp(cronCreateRequest.getHttp());
+
+        List<Contacts> contacts = contactsRepository.findByUserIds(cronCreateRequest.getContacts());
+        cron.setContacts(contacts);
+        cron.setCronType(cronCreateRequest.getCronType());
+
+        cronRepository.save(cron);
+
+
+        //////////////////////////////
+        var jsonObject = new JSONObject();
+        jsonObject.put("typeOperation","edit_cron");
+        jsonObject.put("cron",new JSONObject(ClassUtils.fromObjectToJson(cron)));
+        sendMessageInKafka(jsonObject.toString());
+        /////////////////////////////
+
+
+        return ResponseEntity.ok(cron);
+
+    }
+
+
+    public List<Cron> getMyCrons(){
+        var user = StringUtils.getUser();
+        return cronRepository.getCronByUserId(user.getId());
+    }
+
+
+
+    public void sendMessageInKafka(String message){
+        kafkaTemplate.send(NotificationServerApplication.topicMainControllerReader,message);
+
     }
 
 }

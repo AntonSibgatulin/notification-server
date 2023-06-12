@@ -68,17 +68,22 @@ public class QueueJobRunr extends Thread {
             jsonObject.put("messageId",id);
             jsonObject.put("type","email");
             jsonObject.put("userId",user.getId());
+            //if(x==messageEntity.getContacts().length-1){
+            //    jsonObject.put("lastOne",true);
+            //}
+
             kafkaTemplate.send(NotificationServerApplication.name_of_topic, jsonObject.toString());
 
             //System.out.println(jsonObject);
             //list.offer(jsonObject);
         }
+        
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("typeOperation","end_send");
         jsonObject.put("messageId",id);
         jsonObject.put("userId",user.getId());
         kafkaTemplate.send(NotificationServerApplication.name_of_topic, jsonObject.toString());
-
+        
         //list.offer(jsonObject);
 
 

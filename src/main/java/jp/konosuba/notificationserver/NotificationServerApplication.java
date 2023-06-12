@@ -19,6 +19,7 @@ public class NotificationServerApplication {
     public static String redis_host;
     public static Integer redis_port;
     public static Integer count_of_consumers;
+    public static String topicMainControllerReader;
 
     public static void main(String[] args) {
         JSONObject jsonObject = readConfigureFile("configure/config.json");
@@ -28,12 +29,14 @@ public class NotificationServerApplication {
         String redisHost = jsonObject.getString("redis_host");
         Integer redisPort = jsonObject.getInt("redis_port");
         Integer countOfConsumers = jsonObject.getInt("count_of_consumers");
+        String topicMainControllerReaderStatic = jsonObject.getString("topicMainControllerReader");
 
         count_of_thread_to_put_in_poll = countThreadInPoll;
         name_of_topic = nameOfTopic;
         redis_host = redisHost;
         redis_port = redisPort;
         count_of_consumers = countOfConsumers;
+        topicMainControllerReader = topicMainControllerReaderStatic;
 
 
         SpringApplication.run(NotificationServerApplication.class, args);

@@ -9,4 +9,5 @@ public class Code {
     public static final Integer CODE_NOT_VALID = 405;
     public static final int FILE_IS_EMPTY = 900;
     public static final Integer NOT_FOUND = 404;
+    public static final Integer ACCESS_DENIED = 901;
 }
