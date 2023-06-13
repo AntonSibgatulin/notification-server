@@ -109,7 +109,7 @@ public record CronService(CronRepository cronRepository,
         cron.setMessage(cronCreateRequest.getMessage());
         cron.setHttp(cronCreateRequest.getHttp());
 
-        List<Contacts> contacts = contactsRepository.findByUserIds(cronCreateRequest.getContacts());
+        List<Contacts> contacts = contactsRepository.findAllById(cronCreateRequest.getContacts());
         cron.setContacts(contacts);
         cron.setCronType(cronCreateRequest.getCronType());
 
