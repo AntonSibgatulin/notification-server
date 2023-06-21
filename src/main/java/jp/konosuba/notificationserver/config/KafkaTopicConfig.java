@@ -11,6 +11,6 @@ public class KafkaTopicConfig {
 
     @Bean
     public NewTopic notificatorTopic(){
-        return TopicBuilder.name(NotificationServerApplication.name_of_topic).partitions(NotificationServerApplication.count_of_consumers).replicas(2).build();
+        return TopicBuilder.name(NotificationServerApplication.name_of_topic).partitions(NotificationServerApplication.count_of_consumers).build();
     }
 }

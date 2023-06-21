@@ -60,8 +60,14 @@ public class QueueJobRunr extends Thread {
          */
         putValue(id,messageData);
 
-
+        var count_ = (int) Math.ceil(messageEntity.getContacts().length/NotificationServerApplication.count_of_consumers);
+        if(count_<=0)count_ = 1;
         for (int x = 0; x < messageEntity.getContacts().length; x++) {
+            var partition = (int)Math.ceil(x/count_);
+            if (partition>NotificationServerApplication.count_of_consumers-1){
+                partition = NotificationServerApplication.count_of_consumers-1;
+            }
+            //System.out.println(x+" "+count_+" "+partition);
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("typeOperation","send");
             jsonObject.put("contact", new JSONObject(ClassUtils.fromObjectToJson(messageEntity.getContacts()[x])));
@@ -72,7 +78,7 @@ public class QueueJobRunr extends Thread {
             //    jsonObject.put("lastOne",true);
             //}
 
-            kafkaTemplate.send(NotificationServerApplication.name_of_topic, jsonObject.toString());
+            kafkaTemplate.send(NotificationServerApplication.name_of_topic, partition ,null,jsonObject.toString());
 
             //System.out.println(jsonObject);
             //list.offer(jsonObject);

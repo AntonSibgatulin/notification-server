@@ -3,6 +3,6 @@
   "name_of_topic": "notificator-api",
   "redis_host":"localhost",
   "redis_port":6379,
-  "count_of_consumers":1,
+  "count_of_consumers":3,
   "topicMainControllerReader":"main-controller-api"
 }

@@ -1,7 +1,14 @@
 package jp.konosuba.notificationserver;
 
+import jp.konosuba.notificationserver.data.contact.Contacts;
+import jp.konosuba.notificationserver.data.contact.ContactsRepository;
+import jp.konosuba.notificationserver.data.messages.MessageRepository;
+import jp.konosuba.notificationserver.data.user.user.User;
+import jp.konosuba.notificationserver.data.user.user.UserRepository;
+import jp.konosuba.notificationserver.utils.ClassUtils;
 import org.json.JSONObject;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -9,6 +16,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.kafka.core.KafkaTemplate;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @EnableBatchProcessing
 @SpringBootApplication
@@ -20,6 +29,7 @@ public class NotificationServerApplication {
     public static Integer redis_port;
     public static Integer count_of_consumers;
     public static String topicMainControllerReader;
+
 
     public static void main(String[] args) {
         JSONObject jsonObject = readConfigureFile("configure/config.json");
@@ -60,12 +70,34 @@ public class NotificationServerApplication {
         return null;
     }
 
-    //@Bean
-    CommandLineRunner commandLineRunner(KafkaTemplate<String,String> kafkaTemplate){
-        return args ->
-        {
-            for (int i = 0;i<10_000_000;i++)
-            kafkaTemplate.send("notificator","hello kafka "+i);
+    /*
+    @Bean
+    CommandLineRunner commandLineRunner(UserRepository userRepository,ContactsRepository contactsRepository){
+        return args -> {
+            User user = userRepository.getUserById(1L);
+            List<Contacts> contacts = contactsRepository.findAllByUser(user);
+
+            System.out.println(ClassUtils.fromObjectToJson(contacts));
+            List<Contacts> contactsList = new ArrayList<>();
+            for (var i =0;i<1500;i++){
+                var contact = new Contacts();
+                contact.setName("Test");
+                contact.setEmail("test_"+i+"@test.test.ru");
+                contact.setUser(user);
+                contact.setWs(false);
+                contact.setTg(false);
+                contact.setVk(false);
+                contact.setRelative(false);
+                contact.setPhone("88888888888");
+                contactsList.add(contact);
+            }
+            contactsRepository.saveAll(contactsList);
+            System.out.println("OK All contacts saved");
+
         };
     }
+
+     */
+
+
 }
