@@ -7,7 +7,6 @@ Notificator - это система, разработанная для опов�
 [Youtube video with running](https://www.youtube.com/watch?v=7CCoSfbnGbk&t=305s) - https://www.youtube.com/watch?v=7CCoSfbnGbk&t=305s
 <br>
 <br>
-<br>
 [How does it working](https://www.youtube.com/watch?v=lbhYA82EiAU&t=2640s) - https://www.youtube.com/watch?v=lbhYA82EiAU&t=2640s
 
 <br>
